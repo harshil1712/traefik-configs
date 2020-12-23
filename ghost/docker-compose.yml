@@ -1,0 +1,24 @@
+# Docker Compose file for Ghost
+version: '3.1'
+networks:
+   web:
+     external: true
+   internal:
+     external: false
+services:
+  ghost:
+    image: ghost:latest
+    restart: always
+    labels:
+      - traefik.http.routers.ghost.rule=Host(`sub.domain.tld`)
+      - traefik.http.routers.ghost.tls=true
+      - traefik.http.routers.ghost.tls.certresolver=lets-encrypt
+      - traefik.port=80
+    environment:
+      NODE_ENV: production
+    networks:
+      - web
+      - internal
+    volumes:
+      - ./content:/var/lib/ghost/content
+      - ./config.production.json:/var/lib/ghost/config.production.json

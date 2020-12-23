@@ -1,0 +1,23 @@
+# Docker Compose file for Traefik
+version: '3'
+
+services:
+  traefik:
+    # The latest official supported Traefik docker image
+    image: traefik:latest
+    ports:
+      # Exposes port 80 for incomming web requests
+      - "80:80"
+      - "443:443"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik.toml:/traefik.toml
+      - $PWD/traefik_dynamic.yml:/traefik_dynamic.yml
+      - $PWD/acme.json:/acme.json
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
